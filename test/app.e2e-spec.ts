@@ -117,10 +117,33 @@ describe('App e2e', () => {
         .patch('/users')
         .withHeaders({ Authorization: 'Bearer $S{userAt} '})
         .withBody(dto)
-        .expectStatus(200);
+        .expectStatus(200)
+        .expectBodyContains(dto.firstName)
+        .expectBodyContains(dto.lastName);
       })
     });
   })
 
-  describe('Bookmark', () => {});
-})
+  describe('Bookmark', () => {
+    describe('Get empty bookmarks', () => {
+      it('Should get empty bookmarks', () => {
+        return pactum
+        .spec()
+        .get('/bookmarks')
+        .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+        .expectStatus(200)
+        .expectBody([]);
+      });
+    });
+
+    describe('Create bookmark', () => {});
+
+    describe('Get bookmarks', () => {});
+
+    describe('Get bookmark by id', () => {});
+
+    describe('Edit bookmark by id', () => {});
+
+    describe('Delete bookmark by id', () => {});
+  });
+});
