@@ -181,7 +181,7 @@ describe('App e2e', () => {
         title: 'First Title',
         description: 'First Description'
       }
-      it('Should edit bookmark by id', () => {
+      it('Should edit bookmark', () => {
         return pactum
         .spec()
         .patch('/bookmarks/{id}')
@@ -194,6 +194,24 @@ describe('App e2e', () => {
       });
     });
 
-    describe('Delete bookmark by id', () => {});
+    describe('Delete bookmark by id', () => {
+      it('Should delete bookmark', () => {
+        return pactum
+        .spec()
+        .delete('/bookmarks/{id}')
+        .withPathParams('id', '$S{bookmarkId}')
+        .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+        .expectStatus(204);
+      });
+
+      it('Should get empty bookmarks', () => {
+        return pactum
+        .spec()
+        .get('/bookmarks')
+        .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+        .expectStatus(200)
+        .expectBody([]);
+      });
+    });
   });
 });
