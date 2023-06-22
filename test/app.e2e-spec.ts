@@ -5,6 +5,7 @@ import * as pactum from 'pactum';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { AuthDto } from 'src/auth/dto';
 import { EditUserDto } from 'src/user/dto';
+import { CreateBookmarkDto } from 'src/bookmark/dto';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -136,11 +137,43 @@ describe('App e2e', () => {
       });
     });
 
-    describe('Create bookmark', () => {});
+    describe('Create bookmark', () => {
+      const dto: CreateBookmarkDto = {
+        title: 'First Bookmark',
+        link: 'First link'
+      }
+      it('Should create bookmark', () => {
+        return pactum
+        .spec()
+        .post('/bookmarks')
+        .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+        .withBody(dto)
+        .expectStatus(201)
+        .stores('bookmarkId', 'id');
+      });
+    });
 
-    describe('Get bookmarks', () => {});
+    describe('Get bookmarks', () => {
+      it('Should get bookmarks', () => {
+        return pactum
+        .spec()
+        .get('/bookmarks')
+        .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+        .expectStatus(200)
+        .expectJsonLength(1);
+      });
+    });
 
-    describe('Get bookmark by id', () => {});
+    describe('Get bookmark by id', () => {
+      it('Should get bookmark by id', () => {
+        return pactum
+        .spec()
+        .get('/bookmarks/{id}')
+        .withPathParams('id', '$S{bookmarkId}')
+        .withHeaders({ Authorization: 'Bearer $S{userAt}' })
+        .expectStatus(200);
+      });
+    });
 
     describe('Edit bookmark by id', () => {});
 
